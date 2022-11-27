@@ -1,0 +1,79 @@
+from news.models import *
+
+u1 = User.objects.create_user('Alex')
+u2 = User.objects.create_user('Lize')
+
+Author.objects.create(author=u1)
+Author.objects.create(author=u2)
+
+author_1 = Author.objects.get(id=1)
+author_2 = Author.objects.get(id=2)
+
+Category.objects.create(category_name="World News")
+Category.objects.create(category_name="Sport")
+Category.objects.create(category_name="Environment")
+Category.objects.create(category_name="Funny Animals")
+
+Post.objects.create(author=author_1, choice="NE", title = "RDS Europe 2022", content="The RDS EUROPE season is over: six bright stages have died down, the names of the new champions are known! The denouement of the season turned out to be dramatic, as if in a film about racing: an amazing intrigue, the strongest participants, confident favorites and new faces, difficult weather conditions and technical troubles.")
+Post.objects.create(author=author_1, choice="AR", title = "Analyzing the Flaws of the Modern Climate Movement", content="Eco-camp recognizes the paradox of society’s prevailing belief in climate change and the general unwillingness of many to make personal sacrifices for the climate, representing one of the fundamental policy challenges facing the climate movement. Sontag felt that “the essential element [of camp] is seriousness, a seriousness that fails” and that “…sincerity is not enough” because it can be considered akin to “intellectual narrowness” (Sontag 267, 273). The high percentage of support for drastic climate action demonstrates a true sincerity among the adherents of that movement, but a sincerity that appears detached from a determination to act. Sentiments about climate change cannot be taken seriously if the vast majority of society is against any of the policy proposals that could actually combat the problems associated with the climate crisis.")
+Post.objects.create(author=author_2, choice="AR", title = "The 7 Funniest Animals in the Animal Kingdom", content="The platypus. Do you remember when you first saw this animal? Some people laugh at it, others find it completely baffling. Whatever the case, we can’t deny that the platypus is most peculiar. It has the body of a squirrel, the legs and beak of a duck, and the tail of a beaver. The long-eared jerboa. This funny, mouse-like jerboa is even more fun when it has ears as long as a rabbit. They’re usually the same size as its body, which makes it quite a funny animal to look at. It’s known as the mammal with the largest ears in proportion to its size, as its body doesn’t exceed 10 centimeters (4 inches). It lives in China and Mongolia, and feeds on insects.")
+
+Post.objects.get(id=1).category.add(Category.objects.get(id=1))
+Post.objects.get(id=1).category.add(Category.objects.get(id=2))
+
+Post.objects.get(id=2).category.add(Category.objects.get(id=1))
+Post.objects.get(id=2).category.add(Category.objects.get(id=3))
+
+Post.objects.get(id=3).category.add(Category.objects.get(id=3))
+Post.objects.get(id=3).category.add(Category.objects.get(id=4))
+
+Comment.objects.create(post=Post.objects.get(id=1), commentator=Author.objects.get(id=1).author, comment_content="Cool, congrats!")
+Comment.objects.create(post=Post.objects.get(id=1), commentator=Author.objects.get(id=2).author, comment_content="They finally made it! Cheers!")
+Comment.objects.create(post=Post.objects.get(id=2), commentator=Author.objects.get(id=2).author, comment_content="So hypocritical! (︶︹︺)")
+Comment.objects.create(post=Post.objects.get(id=3), commentator=Author.objects.get(id=1).author, comment_content="Platypuses are really weird-looking...(o_O)")
+
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=1).like()
+
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=2).dislike()
+
+Comment.objects.get(id=3).dislike()
+Comment.objects.get(id=3).dislike()
+Comment.objects.get(id=3).dislike()
+
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=4).like()
+
+Post.objects.get(id=1).like()
+Post.objects.get(id=1).dislike()
+Post.objects.get(id=1).like()
+
+Post.objects.get(id=2).dislike()
+Post.objects.get(id=2).like()
+
+Post.objects.get(id=3).like()
+Post.objects.get(id=3).like()
+Post.objects.get(id=3).like()
+
+
+
+author_1.update_rating()
+author_2.update_rating()
+
+author_1.author_rate
+author_2.author_rate
+
+a = Author.objects.order_by('-author_rate')[:1]
+
+p = Post.objects.order_by('-news_rate')[:1]
+
+for i in p:
+    i.author.username #не выводит username, пишет, что такого параметра нет
+    i.news_rate
+
+Post.objects.filter(id=3).values("date", "author", "news_rate", "title")
+Post.objects.get(id=3).preview()
+
+Comment.objects.filter(post__id=3).values("date", "commentator", "comment_rate", "comment_content")
